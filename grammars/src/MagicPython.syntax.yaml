@@ -1112,6 +1112,7 @@ repository:
     patterns:
       - include: '#special-variables'
       - include: '#builtin-functions'
+      - include: '#builtin-types'
       - include: '#special-names'
       - name: meta.indexed-name.python
         match: |

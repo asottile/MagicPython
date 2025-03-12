@@ -142,6 +142,7 @@ repository:
   statement:
     patterns:
       - include: '#import'
+      - include: '#type-declaration'
       - include: '#class-declaration'
       - include: '#function-declaration'
       - include: '#generator'
@@ -831,6 +832,31 @@ repository:
             match: \b(?<!\.)as\b
           - include: '#expression'
 
+  type-declaration:
+    name: meta.type.python
+    begin: |
+      (?x)
+        \s*(type)\s+
+          (?=
+            [[:alpha:]_][[:word:]]* \s* [=\[]
+          )
+
+    end: ((?=[=]))
+    beginCaptures:
+      '1': {name: storage.type.type.python}
+    patterns:
+     - include: '#type-name'
+     - include: '#type-parameters'
+
+  type-name:
+    patterns:
+      - include: '#illegal-object-name'
+      - include: '#builtin-possible-callables'
+      - name: entity.name.type.type.python
+        match: |
+          (?x)
+            \b ([[:alpha:]_]\w*) \b
+
   class-declaration:
     patterns:
       - name: meta.class.python
@@ -838,7 +864,7 @@ repository:
           (?x)
             \s*(class)\s+
               (?=
-                [[:alpha:]_]\w* \s* (:|\()
+                [[:alpha:]_]\w* \s* (:|[\[(])
               )
         end: (:)
         beginCaptures:
@@ -848,6 +874,7 @@ repository:
         patterns:
           - include: '#class-name'
           - include: '#class-inheritance'
+          - include: '#type-parameters'
 
   class-name:
     patterns:
@@ -992,7 +1019,7 @@ repository:
         \s*
         (?:\b(async) \s+)? \b(def)\s+
           (?=
-            [[:alpha:]_][[:word:]]* \s* \(
+            [[:alpha:]_][[:word:]]* \s* [(\[]
           )
 
     end: (:|(?=[#'"\n]))
@@ -1005,6 +1032,7 @@ repository:
 
     patterns:
       - include: '#function-def-name'
+      - include: '#type-parameters'
       - include: '#parameters'
       - include: '#line-continuation'
       - include: '#return-annotation'
@@ -1017,6 +1045,43 @@ repository:
         match: |
           (?x)
             \b ([[:alpha:]_]\w*) \b
+
+  type-parameters:
+    name: meta.function.parameters.type.python
+    begin: (\[)
+    end: (\])
+    beginCaptures:
+      '1': {name: punctuation.definition.parameters.begin.python}
+    endCaptures:
+      '1': {name: punctuation.definition.parameters.end.python}
+
+    patterns:
+      - name: keyword.operator.unpacking.parameter.python
+        match: (\*\*|\*)
+      - include: '#lambda-incomplete'
+      - include: '#illegal-names'
+      - include: '#illegal-object-name'
+      - match: |
+          (?x)
+            ([[:alpha:]_]\w*)
+              \s* (?: (,) | (?=[\]#\n=]))
+        captures:
+          '1': {name: variable.parameter.function.language.python}
+          '2': {name: punctuation.separator.parameters.python}
+
+      - include: '#comments'
+      - include: '#type-loose-default'
+      - include: '#type-annotated-parameter'
+
+  type-loose-default:
+    begin: (=)
+    end: (,)|(?=\])
+    beginCaptures:
+      '1': {name: keyword.operator.python}
+    endCaptures:
+      '1': {name: punctuation.separator.parameters.python}
+    patterns:
+      - include: '#expression'
 
   parameters:
     name: meta.function.parameters.python
@@ -1067,6 +1132,22 @@ repository:
       '1': {name: punctuation.separator.parameters.python}
     patterns:
       - include: '#expression'
+
+  type-annotated-parameter:
+    begin: |
+      (?x)
+        \b
+        ([[:alpha:]_]\w*) \s* (:)
+    end: (,)|(?=\])
+    beginCaptures:
+      '1': {name: variable.parameter.function.language.python}
+      '2': {name: punctuation.separator.annotation.python}
+    endCaptures:
+      '1': {name: punctuation.separator.parameters.python}
+    patterns:
+      - include: '#expression'
+      - name: keyword.operator.assignment.python
+        match: =(?!=)
 
   annotated-parameter:
     begin: |

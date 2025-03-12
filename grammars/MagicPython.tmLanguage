@@ -61,6 +61,10 @@
           </dict>
           <dict>
             <key>include</key>
+            <string>#type-declaration</string>
+          </dict>
+          <dict>
+            <key>include</key>
             <string>#class-declaration</string>
           </dict>
           <dict>
@@ -1675,6 +1679,61 @@ E.g. "arr[idx](args)"
           </dict>
         </array>
       </dict>
+      <key>type-declaration</key>
+      <dict>
+        <key>name</key>
+        <string>meta.type.python</string>
+        <key>begin</key>
+        <string>(?x)
+  \s*(type)\s+
+    (?=
+      [[:alpha:]_][[:word:]]* \s* [=\[]
+    )
+</string>
+        <key>end</key>
+        <string>((?=[=]))</string>
+        <key>beginCaptures</key>
+        <dict>
+          <key>1</key>
+          <dict>
+            <key>name</key>
+            <string>storage.type.type.python</string>
+          </dict>
+        </dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>include</key>
+            <string>#type-name</string>
+          </dict>
+          <dict>
+            <key>include</key>
+            <string>#type-parameters</string>
+          </dict>
+        </array>
+      </dict>
+      <key>type-name</key>
+      <dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>include</key>
+            <string>#illegal-object-name</string>
+          </dict>
+          <dict>
+            <key>include</key>
+            <string>#builtin-possible-callables</string>
+          </dict>
+          <dict>
+            <key>name</key>
+            <string>entity.name.type.type.python</string>
+            <key>match</key>
+            <string>(?x)
+  \b ([[:alpha:]_]\w*) \b
+</string>
+          </dict>
+        </array>
+      </dict>
       <key>class-declaration</key>
       <dict>
         <key>patterns</key>
@@ -1686,7 +1745,7 @@ E.g. "arr[idx](args)"
             <string>(?x)
   \s*(class)\s+
     (?=
-      [[:alpha:]_]\w* \s* (:|\()
+      [[:alpha:]_]\w* \s* (:|[\[(])
     )
 </string>
             <key>end</key>
@@ -1716,6 +1775,10 @@ E.g. "arr[idx](args)"
               <dict>
                 <key>include</key>
                 <string>#class-inheritance</string>
+              </dict>
+              <dict>
+                <key>include</key>
+                <string>#type-parameters</string>
               </dict>
             </array>
           </dict>
@@ -2103,7 +2166,7 @@ correctly identify the "in" as a control flow keyword.
   \s*
   (?:\b(async) \s+)? \b(def)\s+
     (?=
-      [[:alpha:]_][[:word:]]* \s* \(
+      [[:alpha:]_][[:word:]]* \s* [(\[]
     )
 </string>
         <key>end</key>
@@ -2134,6 +2197,10 @@ correctly identify the "in" as a control flow keyword.
           <dict>
             <key>include</key>
             <string>#function-def-name</string>
+          </dict>
+          <dict>
+            <key>include</key>
+            <string>#type-parameters</string>
           </dict>
           <dict>
             <key>include</key>
@@ -2168,6 +2235,114 @@ correctly identify the "in" as a control flow keyword.
             <string>(?x)
   \b ([[:alpha:]_]\w*) \b
 </string>
+          </dict>
+        </array>
+      </dict>
+      <key>type-parameters</key>
+      <dict>
+        <key>name</key>
+        <string>meta.function.parameters.type.python</string>
+        <key>begin</key>
+        <string>(\[)</string>
+        <key>end</key>
+        <string>(\])</string>
+        <key>beginCaptures</key>
+        <dict>
+          <key>1</key>
+          <dict>
+            <key>name</key>
+            <string>punctuation.definition.parameters.begin.python</string>
+          </dict>
+        </dict>
+        <key>endCaptures</key>
+        <dict>
+          <key>1</key>
+          <dict>
+            <key>name</key>
+            <string>punctuation.definition.parameters.end.python</string>
+          </dict>
+        </dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>name</key>
+            <string>keyword.operator.unpacking.parameter.python</string>
+            <key>match</key>
+            <string>(\*\*|\*)</string>
+          </dict>
+          <dict>
+            <key>include</key>
+            <string>#lambda-incomplete</string>
+          </dict>
+          <dict>
+            <key>include</key>
+            <string>#illegal-names</string>
+          </dict>
+          <dict>
+            <key>include</key>
+            <string>#illegal-object-name</string>
+          </dict>
+          <dict>
+            <key>match</key>
+            <string>(?x)
+  ([[:alpha:]_]\w*)
+    \s* (?: (,) | (?=[\]#\n=]))
+</string>
+            <key>captures</key>
+            <dict>
+              <key>1</key>
+              <dict>
+                <key>name</key>
+                <string>variable.parameter.function.language.python</string>
+              </dict>
+              <key>2</key>
+              <dict>
+                <key>name</key>
+                <string>punctuation.separator.parameters.python</string>
+              </dict>
+            </dict>
+          </dict>
+          <dict>
+            <key>include</key>
+            <string>#comments</string>
+          </dict>
+          <dict>
+            <key>include</key>
+            <string>#type-loose-default</string>
+          </dict>
+          <dict>
+            <key>include</key>
+            <string>#type-annotated-parameter</string>
+          </dict>
+        </array>
+      </dict>
+      <key>type-loose-default</key>
+      <dict>
+        <key>begin</key>
+        <string>(=)</string>
+        <key>end</key>
+        <string>(,)|(?=\])</string>
+        <key>beginCaptures</key>
+        <dict>
+          <key>1</key>
+          <dict>
+            <key>name</key>
+            <string>keyword.operator.python</string>
+          </dict>
+        </dict>
+        <key>endCaptures</key>
+        <dict>
+          <key>1</key>
+          <dict>
+            <key>name</key>
+            <string>punctuation.separator.parameters.python</string>
+          </dict>
+        </dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>include</key>
+            <string>#expression</string>
           </dict>
         </array>
       </dict>
@@ -2319,6 +2494,50 @@ correctly identify the "in" as a control flow keyword.
           </dict>
         </array>
       </dict>
+      <key>type-annotated-parameter</key>
+      <dict>
+        <key>begin</key>
+        <string>(?x)
+  \b
+  ([[:alpha:]_]\w*) \s* (:)
+</string>
+        <key>end</key>
+        <string>(,)|(?=\])</string>
+        <key>beginCaptures</key>
+        <dict>
+          <key>1</key>
+          <dict>
+            <key>name</key>
+            <string>variable.parameter.function.language.python</string>
+          </dict>
+          <key>2</key>
+          <dict>
+            <key>name</key>
+            <string>punctuation.separator.annotation.python</string>
+          </dict>
+        </dict>
+        <key>endCaptures</key>
+        <dict>
+          <key>1</key>
+          <dict>
+            <key>name</key>
+            <string>punctuation.separator.parameters.python</string>
+          </dict>
+        </dict>
+        <key>patterns</key>
+        <array>
+          <dict>
+            <key>include</key>
+            <string>#expression</string>
+          </dict>
+          <dict>
+            <key>name</key>
+            <string>keyword.operator.assignment.python</string>
+            <key>match</key>
+            <string>=(?!=)</string>
+          </dict>
+        </array>
+      </dict>
       <key>annotated-parameter</key>
       <dict>
         <key>begin</key>
@@ -2437,6 +2656,10 @@ correctly identify the "in" as a control flow keyword.
           <dict>
             <key>include</key>
             <string>#builtin-functions</string>
+          </dict>
+          <dict>
+            <key>include</key>
+            <string>#builtin-types</string>
           </dict>
           <dict>
             <key>include</key>

@@ -1555,6 +1555,9 @@ repository:
         include: "#builtin-functions"
       }
       {
+        include: "#builtin-types"
+      }
+      {
         include: "#special-names"
       }
       {

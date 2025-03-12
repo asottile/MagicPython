@@ -2440,6 +2440,10 @@ correctly identify the "in" as a control flow keyword.
           </dict>
           <dict>
             <key>include</key>
+            <string>#builtin-types</string>
+          </dict>
+          <dict>
+            <key>include</key>
             <string>#special-names</string>
           </dict>
           <dict>

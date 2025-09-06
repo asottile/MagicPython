@@ -1,7 +1,7 @@
 ---
-fstring-fnorm-quoted-${line}-line:
-  name: meta.fstring.python
-  begin: (\b[fF])([bBuU])?(${marker})
+${type}string-${type}norm-quoted-${line}-line:
+  name: meta.${type}string.python
+  begin: (\b[${chars}])([bBuU])?(${marker})
   end: (\3)${guard}
   beginCaptures:
     # "storage.type.string.python" class should be the first one,
@@ -24,12 +24,12 @@ fstring-fnorm-quoted-${line}-line:
   patterns:
     - include: '#fstring-guts'
     - include: '#fstring-illegal-${line}-brace'
-    - include: '#fstring-${line}-brace'
-    - include: '#fstring-${line}-core'
+    - include: '#${type}string-${line}-brace'
+    - include: '#${type}string-${line}-core'
 
-fstring-normf-quoted-${line}-line:
-  name: meta.fstring.python
-  begin: (\b[bBuU])([fF])(${marker})
+${type}string-norm${type}-quoted-${line}-line:
+  name: meta.${type}string.python
+  begin: (\b[bBuU])([${chars}])(${marker})
   end: (\3)${guard}
   beginCaptures:
     '1': {name: invalid.illegal.prefix.python}
@@ -46,12 +46,12 @@ fstring-normf-quoted-${line}-line:
   patterns:
     - include: '#fstring-guts'
     - include: '#fstring-illegal-${line}-brace'
-    - include: '#fstring-${line}-brace'
-    - include: '#fstring-${line}-core'
+    - include: '#${type}string-${line}-brace'
+    - include: '#${type}string-${line}-core'
 
-fstring-raw-quoted-${line}-line:
-  name: meta.fstring.python
-  begin: (\b(?:[rR][fF]|[fF][rR]))(${marker})
+${type}string-raw-quoted-${line}-line:
+  name: meta.${type}string.python
+  begin: (\b(?:[rR][${chars}]|[${chars}][rR]))(${marker})
   end: (\2)${guard}
   beginCaptures:
     '1': {name: storage.type.string.python
@@ -67,10 +67,10 @@ fstring-raw-quoted-${line}-line:
   patterns:
     - include: '#fstring-raw-guts'
     - include: '#fstring-illegal-${line}-brace'
-    - include: '#fstring-${line}-brace'
-    - include: '#fstring-raw-${line}-core'
+    - include: '#${type}string-${line}-brace'
+    - include: '#${type}string-raw-${line}-core'
 
-fstring-${line}-core:
+${type}string-${line}-core:
   name: string.quoted.${line}.python string.interpolated.python
   match: |
     (?x)
@@ -90,7 +90,7 @@ fstring-${line}-core:
         for matching a newline character)
       | \n
 
-fstring-raw-${line}-core:
+${type}string-raw-${line}-core:
   name: string.quoted.raw.${line}.python string.interpolated.python
   match: |
     (?x)
@@ -110,7 +110,7 @@ fstring-raw-${line}-core:
         for matching a newline character)
       | \n
 
-fstring-${line}-brace:
+${type}string-${line}-brace:
   comment: value interpolation using { ... }
   begin: (\{)
   end: |
@@ -121,10 +121,10 @@ fstring-${line}-brace:
   endCaptures:
     '1': {name: constant.character.format.placeholder.other.python}
   patterns:
-    - include: '#fstring-terminator-${line}'
+    - include: '#${type}string-terminator-${line}'
     - include: '#f-expression'
 
-fstring-terminator-${line}:
+${type}string-terminator-${line}:
   patterns:
     - name: storage.type.format.python
       match: (=(![rsa])?)(?=})
@@ -147,9 +147,9 @@ fstring-terminator-${line}:
         '1': {name: storage.type.format.python}
         '2': {name: storage.type.format.python}
 
-    - include: '#fstring-terminator-${line}-tail'
+    - include: '#${type}string-terminator-${line}-tail'
 
-fstring-terminator-${line}-tail:
+${type}string-terminator-${line}-tail:
   begin: ((?:=?)(?:![rsa])?)(:)(?=.*?{)
   end: (?=})${fguard}
   beginCaptures:
@@ -158,7 +158,7 @@ fstring-terminator-${line}-tail:
 
   patterns:
     - include: '#fstring-illegal-${line}-brace'
-    - include: '#fstring-${line}-brace'
+    - include: '#${type}string-${line}-brace'
     - name: storage.type.format.python
       match: ([bcdeEfFgGnosxX%])(?=})
     - name: storage.type.format.python

@@ -117,6 +117,8 @@ repository:
 
     - file: 'pyfstring.inc.syntax.yaml'
       vars:
+        type: f
+        chars: fF
         line: single
         marker: (['"])
         fguard: "|(?=\\n)"
@@ -124,6 +126,26 @@ repository:
 
     - file: 'pyfstring.inc.syntax.yaml'
       vars:
+        type: f
+        chars: fF
+        line: multi
+        marker: "'''|\"\"\""
+        fguard: ""
+        guard: ""
+
+    - file: 'pyfstring.inc.syntax.yaml'
+      vars:
+        type: t
+        chars: tT
+        line: single
+        marker: (['"])
+        fguard: "|(?=\\n)"
+        guard: "|((?<!\\\\)\\n)"
+
+    - file: 'pyfstring.inc.syntax.yaml'
+      vars:
+        type: t
+        chars: tT
         line: multi
         marker: "'''|\"\"\""
         fguard: ""
@@ -648,6 +670,12 @@ repository:
       - include: '#fstring-normf-quoted-single-line'
       - include: '#fstring-raw-quoted-multi-line'
       - include: '#fstring-raw-quoted-single-line'
+      - include: '#tstring-tnorm-quoted-multi-line'
+      - include: '#tstring-tnorm-quoted-single-line'
+      - include: '#tstring-normt-quoted-multi-line'
+      - include: '#tstring-normt-quoted-single-line'
+      - include: '#tstring-raw-quoted-multi-line'
+      - include: '#tstring-raw-quoted-single-line'
 
   string-unicode-guts:
     patterns:
@@ -806,6 +834,15 @@ repository:
       - include: '#fstring-formatting-singe-brace'
 
   fstring-formatting-singe-brace:
+    name: invalid.illegal.brace.python
+    match: (}(?!}))
+
+  tstring-formatting:
+    patterns:
+      - include: '#tstring-formatting-braces'
+      - include: '#tstring-formatting-singe-brace'
+
+  tstring-formatting-singe-brace:
     name: invalid.illegal.brace.python
     match: (}(?!}))
 

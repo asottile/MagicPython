@@ -26,6 +26,7 @@ entity.name.tag.backreference.regexp
 entity.name.tag.named.backreference.regexp
 entity.name.tag.named.group.regexp
 entity.name.type.class.python
+entity.name.type.type.python
 entity.other.inherited-class.python
 invalid.deprecated.backtick.python
 invalid.deprecated.prefix.python
@@ -74,12 +75,15 @@ meta.function-call.generic.python
 meta.function-call.python
 meta.function.decorator.python
 meta.function.parameters.python
+meta.function.parameters.type.python
 meta.function.python
 meta.indexed-name.python
 meta.item-access.python
 meta.lambda-function.python
 meta.member.access.python
 meta.named.regexp
+meta.tstring.python
+meta.type.python
 meta.typehint.comment.python
 punctuation.character.set.begin.regexp
 punctuation.character.set.end.regexp
@@ -139,6 +143,7 @@ storage.type.function.python
 storage.type.imaginary.number.python
 storage.type.number.python
 storage.type.string.python
+storage.type.type.python
 string.interpolated.python
 string.quoted.binary.multi.python
 string.quoted.binary.single.python

@@ -842,6 +842,24 @@ repository:
       {
         include: "#fstring-raw-quoted-single-line"
       }
+      {
+        include: "#tstring-tnorm-quoted-multi-line"
+      }
+      {
+        include: "#tstring-tnorm-quoted-single-line"
+      }
+      {
+        include: "#tstring-normt-quoted-multi-line"
+      }
+      {
+        include: "#tstring-normt-quoted-single-line"
+      }
+      {
+        include: "#tstring-raw-quoted-multi-line"
+      }
+      {
+        include: "#tstring-raw-quoted-single-line"
+      }
     ]
   "string-unicode-guts":
     patterns: [
@@ -1058,6 +1076,18 @@ repository:
       }
     ]
   "fstring-formatting-singe-brace":
+    name: "invalid.illegal.brace.python"
+    match: "(}(?!}))"
+  "tstring-formatting":
+    patterns: [
+      {
+        include: "#tstring-formatting-braces"
+      }
+      {
+        include: "#tstring-formatting-singe-brace"
+      }
+    ]
+  "tstring-formatting-singe-brace":
     name: "invalid.illegal.brace.python"
     match: "(}(?!}))"
   import:
@@ -4109,6 +4139,462 @@ repository:
       }
       {
         include: "#fstring-multi-brace"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "([bcdeEfFgGnosxX%])(?=})"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "(\\.\\d+)"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "(,)"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "(\\d+)"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "(\\#)"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "([-+ ])"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "([<>=^])"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "(\\w)"
+      }
+    ]
+  "tstring-tnorm-quoted-single-line":
+    name: "meta.tstring.python"
+    begin: "(\\b[tT])([bBuU])?((['\"]))"
+    end: "(\\3)|((?<!\\\\)\\n)"
+    beginCaptures:
+      "1":
+        name: "storage.type.string.python string.quoted.single.python string.interpolated.python"
+      "2":
+        name: "invalid.illegal.prefix.python"
+      "3":
+        name: "string.quoted.single.python string.interpolated.python punctuation.definition.string.begin.python"
+    endCaptures:
+      "1":
+        name: "string.quoted.single.python string.interpolated.python punctuation.definition.string.end.python"
+      "2":
+        name: "invalid.illegal.newline.python"
+    patterns: [
+      {
+        include: "#fstring-guts"
+      }
+      {
+        include: "#fstring-illegal-single-brace"
+      }
+      {
+        include: "#tstring-single-brace"
+      }
+      {
+        include: "#tstring-single-core"
+      }
+    ]
+  "tstring-normt-quoted-single-line":
+    name: "meta.tstring.python"
+    begin: "(\\b[bBuU])([tT])((['\"]))"
+    end: "(\\3)|((?<!\\\\)\\n)"
+    beginCaptures:
+      "1":
+        name: "invalid.illegal.prefix.python"
+      "2":
+        name: "storage.type.string.python string.quoted.single.python string.interpolated.python"
+      "3":
+        name: "string.quoted.single.python punctuation.definition.string.begin.python"
+    endCaptures:
+      "1":
+        name: "string.quoted.single.python string.interpolated.python punctuation.definition.string.end.python"
+      "2":
+        name: "invalid.illegal.newline.python"
+    patterns: [
+      {
+        include: "#fstring-guts"
+      }
+      {
+        include: "#fstring-illegal-single-brace"
+      }
+      {
+        include: "#tstring-single-brace"
+      }
+      {
+        include: "#tstring-single-core"
+      }
+    ]
+  "tstring-raw-quoted-single-line":
+    name: "meta.tstring.python"
+    begin: "(\\b(?:[rR][tT]|[tT][rR]))((['\"]))"
+    end: "(\\2)|((?<!\\\\)\\n)"
+    beginCaptures:
+      "1":
+        name: "storage.type.string.python string.quoted.raw.single.python string.interpolated.python"
+      "2":
+        name: "string.quoted.raw.single.python punctuation.definition.string.begin.python"
+    endCaptures:
+      "1":
+        name: "string.quoted.raw.single.python string.interpolated.python punctuation.definition.string.end.python"
+      "2":
+        name: "invalid.illegal.newline.python"
+    patterns: [
+      {
+        include: "#fstring-raw-guts"
+      }
+      {
+        include: "#fstring-illegal-single-brace"
+      }
+      {
+        include: "#tstring-single-brace"
+      }
+      {
+        include: "#tstring-raw-single-core"
+      }
+    ]
+  "tstring-single-core":
+    name: "string.quoted.single.python string.interpolated.python"
+    match: '''
+      (?x)
+        (.+?)
+          (
+            (?# .* and .*? in multi-line match need special handling of
+              newlines otherwise SublimeText and Atom will match slightly
+              differently.
+      
+              The guard for newlines has to be separate from the
+              lookahead because of special $ matching rule.)
+            ($\\n?)
+            |
+            (?=[\\\\\\}\\{]|(['"])|((?<!\\\\)\\n))
+          )
+        (?# due to how multiline regexps are matched we need a special case
+          for matching a newline character)
+        | \\n
+      
+    '''
+  "tstring-raw-single-core":
+    name: "string.quoted.raw.single.python string.interpolated.python"
+    match: '''
+      (?x)
+        (.+?)
+          (
+            (?# .* and .*? in multi-line match need special handling of
+              newlines otherwise SublimeText and Atom will match slightly
+              differently.
+      
+              The guard for newlines has to be separate from the
+              lookahead because of special $ matching rule.)
+            ($\\n?)
+            |
+            (?=[\\\\\\}\\{]|(['"])|((?<!\\\\)\\n))
+          )
+        (?# due to how multiline regexps are matched we need a special case
+          for matching a newline character)
+        | \\n
+      
+    '''
+  "tstring-single-brace":
+    comment: "value interpolation using { ... }"
+    begin: "(\\{)"
+    end: '''
+      (?x)
+        (\\})|(?=\\n)
+      
+    '''
+    beginCaptures:
+      "1":
+        name: "constant.character.format.placeholder.other.python"
+    endCaptures:
+      "1":
+        name: "constant.character.format.placeholder.other.python"
+    patterns: [
+      {
+        include: "#tstring-terminator-single"
+      }
+      {
+        include: "#f-expression"
+      }
+    ]
+  "tstring-terminator-single":
+    patterns: [
+      {
+        name: "storage.type.format.python"
+        match: "(=(![rsa])?)(?=})"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "(=?![rsa])(?=})"
+      }
+      {
+        match: '''
+          (?x)
+            ( (?: =?) (?: ![rsa])? )
+              ( : \\w? [<>=^]? [-+ ]? \\#?
+                \\d* ,? (\\.\\d+)? [bcdeEfFgGnosxX%]? )(?=})
+          
+        '''
+        captures:
+          "1":
+            name: "storage.type.format.python"
+          "2":
+            name: "storage.type.format.python"
+      }
+      {
+        include: "#tstring-terminator-single-tail"
+      }
+    ]
+  "tstring-terminator-single-tail":
+    begin: "((?:=?)(?:![rsa])?)(:)(?=.*?{)"
+    end: "(?=})|(?=\\n)"
+    beginCaptures:
+      "1":
+        name: "storage.type.format.python"
+      "2":
+        name: "storage.type.format.python"
+    patterns: [
+      {
+        include: "#fstring-illegal-single-brace"
+      }
+      {
+        include: "#tstring-single-brace"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "([bcdeEfFgGnosxX%])(?=})"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "(\\.\\d+)"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "(,)"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "(\\d+)"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "(\\#)"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "([-+ ])"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "([<>=^])"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "(\\w)"
+      }
+    ]
+  "tstring-tnorm-quoted-multi-line":
+    name: "meta.tstring.python"
+    begin: "(\\b[tT])([bBuU])?('''|\"\"\")"
+    end: "(\\3)"
+    beginCaptures:
+      "1":
+        name: "storage.type.string.python string.quoted.multi.python string.interpolated.python"
+      "2":
+        name: "invalid.illegal.prefix.python"
+      "3":
+        name: "string.quoted.multi.python string.interpolated.python punctuation.definition.string.begin.python"
+    endCaptures:
+      "1":
+        name: "string.quoted.multi.python string.interpolated.python punctuation.definition.string.end.python"
+      "2":
+        name: "invalid.illegal.newline.python"
+    patterns: [
+      {
+        include: "#fstring-guts"
+      }
+      {
+        include: "#fstring-illegal-multi-brace"
+      }
+      {
+        include: "#tstring-multi-brace"
+      }
+      {
+        include: "#tstring-multi-core"
+      }
+    ]
+  "tstring-normt-quoted-multi-line":
+    name: "meta.tstring.python"
+    begin: "(\\b[bBuU])([tT])('''|\"\"\")"
+    end: "(\\3)"
+    beginCaptures:
+      "1":
+        name: "invalid.illegal.prefix.python"
+      "2":
+        name: "storage.type.string.python string.quoted.multi.python string.interpolated.python"
+      "3":
+        name: "string.quoted.multi.python punctuation.definition.string.begin.python"
+    endCaptures:
+      "1":
+        name: "string.quoted.multi.python string.interpolated.python punctuation.definition.string.end.python"
+      "2":
+        name: "invalid.illegal.newline.python"
+    patterns: [
+      {
+        include: "#fstring-guts"
+      }
+      {
+        include: "#fstring-illegal-multi-brace"
+      }
+      {
+        include: "#tstring-multi-brace"
+      }
+      {
+        include: "#tstring-multi-core"
+      }
+    ]
+  "tstring-raw-quoted-multi-line":
+    name: "meta.tstring.python"
+    begin: "(\\b(?:[rR][tT]|[tT][rR]))('''|\"\"\")"
+    end: "(\\2)"
+    beginCaptures:
+      "1":
+        name: "storage.type.string.python string.quoted.raw.multi.python string.interpolated.python"
+      "2":
+        name: "string.quoted.raw.multi.python punctuation.definition.string.begin.python"
+    endCaptures:
+      "1":
+        name: "string.quoted.raw.multi.python string.interpolated.python punctuation.definition.string.end.python"
+      "2":
+        name: "invalid.illegal.newline.python"
+    patterns: [
+      {
+        include: "#fstring-raw-guts"
+      }
+      {
+        include: "#fstring-illegal-multi-brace"
+      }
+      {
+        include: "#tstring-multi-brace"
+      }
+      {
+        include: "#tstring-raw-multi-core"
+      }
+    ]
+  "tstring-multi-core":
+    name: "string.quoted.multi.python string.interpolated.python"
+    match: '''
+      (?x)
+        (.+?)
+          (
+            (?# .* and .*? in multi-line match need special handling of
+              newlines otherwise SublimeText and Atom will match slightly
+              differently.
+      
+              The guard for newlines has to be separate from the
+              lookahead because of special $ matching rule.)
+            ($\\n?)
+            |
+            (?=[\\\\\\}\\{]|\'''|""")
+          )
+        (?# due to how multiline regexps are matched we need a special case
+          for matching a newline character)
+        | \\n
+      
+    '''
+  "tstring-raw-multi-core":
+    name: "string.quoted.raw.multi.python string.interpolated.python"
+    match: '''
+      (?x)
+        (.+?)
+          (
+            (?# .* and .*? in multi-line match need special handling of
+              newlines otherwise SublimeText and Atom will match slightly
+              differently.
+      
+              The guard for newlines has to be separate from the
+              lookahead because of special $ matching rule.)
+            ($\\n?)
+            |
+            (?=[\\\\\\}\\{]|\'''|""")
+          )
+        (?# due to how multiline regexps are matched we need a special case
+          for matching a newline character)
+        | \\n
+      
+    '''
+  "tstring-multi-brace":
+    comment: "value interpolation using { ... }"
+    begin: "(\\{)"
+    end: '''
+      (?x)
+        (\\})
+      
+    '''
+    beginCaptures:
+      "1":
+        name: "constant.character.format.placeholder.other.python"
+    endCaptures:
+      "1":
+        name: "constant.character.format.placeholder.other.python"
+    patterns: [
+      {
+        include: "#tstring-terminator-multi"
+      }
+      {
+        include: "#f-expression"
+      }
+    ]
+  "tstring-terminator-multi":
+    patterns: [
+      {
+        name: "storage.type.format.python"
+        match: "(=(![rsa])?)(?=})"
+      }
+      {
+        name: "storage.type.format.python"
+        match: "(=?![rsa])(?=})"
+      }
+      {
+        match: '''
+          (?x)
+            ( (?: =?) (?: ![rsa])? )
+              ( : \\w? [<>=^]? [-+ ]? \\#?
+                \\d* ,? (\\.\\d+)? [bcdeEfFgGnosxX%]? )(?=})
+          
+        '''
+        captures:
+          "1":
+            name: "storage.type.format.python"
+          "2":
+            name: "storage.type.format.python"
+      }
+      {
+        include: "#tstring-terminator-multi-tail"
+      }
+    ]
+  "tstring-terminator-multi-tail":
+    begin: "((?:=?)(?:![rsa])?)(:)(?=.*?{)"
+    end: "(?=})"
+    beginCaptures:
+      "1":
+        name: "storage.type.format.python"
+      "2":
+        name: "storage.type.format.python"
+    patterns: [
+      {
+        include: "#fstring-illegal-multi-brace"
+      }
+      {
+        include: "#tstring-multi-brace"
       }
       {
         name: "storage.type.format.python"

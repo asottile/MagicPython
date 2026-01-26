@@ -80,6 +80,7 @@ meta.item-access.python
 meta.lambda-function.python
 meta.member.access.python
 meta.named.regexp
+meta.tstring.python
 meta.typehint.comment.python
 punctuation.character.set.begin.regexp
 punctuation.character.set.end.regexp

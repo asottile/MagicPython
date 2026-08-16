@@ -72,8 +72,11 @@
     ]
   },
   "devDependencies": {
-    "oniguruma": "^7.0.0",
+    "oniguruma": "git+https://github.com/babi-editor/node-oniguruma#upgrade",
     "syntaxdev": "^0.1.3"
+  },
+  "overrides": {
+    "oniguruma": "$oniguruma"
   },
   "dependencies": {}
 }

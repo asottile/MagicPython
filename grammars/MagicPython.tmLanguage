@@ -1669,6 +1669,12 @@ E.g. "arr[idx](args)"
         <key>patterns</key>
         <array>
           <dict>
+            <key>name</key>
+            <string>keyword.control.import.python</string>
+            <key>match</key>
+            <string>\b(?&lt;!\.)lazy\s+(?=from|import)</string>
+          </dict>
+          <dict>
             <key>begin</key>
             <string>\b(?&lt;!\.)(from)\b(?=.+import)</string>
             <key>end</key>

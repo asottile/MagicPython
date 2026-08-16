@@ -1100,6 +1100,10 @@ repository:
     '''
     patterns: [
       {
+        name: "keyword.control.import.python"
+        match: "\\b(?<!\\.)lazy\\s+(?=from|import)"
+      }
+      {
         begin: "\\b(?<!\\.)(from)\\b(?=.+import)"
         end: "$|(?=import)"
         beginCaptures:
